@@ -10,6 +10,7 @@ import Error404 from "./pages/Error404";
 import ScrollToTop from "./components/ScrollToTop";
 import ProjectsTable from "./components/ProjectsTable";
 import AdminGuard from "./components/AdminGuard";
+import Login from "./pages/Login";
 
 
 function App() {
@@ -22,7 +23,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/proyectos" element={<Projects />} />
           <Route path="/proyectos/:id" element={<ProjectDetails />} />
-          <Route path="*" element={<Error404 />} />
+          <Route path="/login" element={<Login />} />
           <Route
             path="/admin/proyectos"
             element={
@@ -31,6 +32,7 @@ function App() {
               </AdminGuard>
             }
           />
+          <Route path="*" element={<Error404 />} />
         </Routes>
         <Footer />
       </Router>
