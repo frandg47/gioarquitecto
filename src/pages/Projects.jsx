@@ -1,14 +1,13 @@
-import React from 'react'
-import HeroProjects from '../components/HeroProjects'
-import ProjectsSection from '../components/ProjectsSection'
+import HeroProjects from '../components/HeroProjects';
+import ProjectsSection from '../components/ProjectsSection';
 
 const Projects = () => {
   return (
     <>
-        <HeroProjects />
-        <ProjectsSection />
+      <HeroProjects />
+      <ProjectsSection />
     </>
-  )
-}
+  );
+};
 
-export default Projects
+export default Projects;

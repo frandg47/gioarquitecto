@@ -1,13 +1,12 @@
-import { useState, useEffect } from "react";
-import { axiosInstance } from "../config/axiosInstance";
-import { Table } from "react-bootstrap";
-import Skeleton from "react-loading-skeleton";
-import "react-loading-skeleton/dist/skeleton.css";
-import Swal from "sweetalert2";
-import EditProjectModal from "./EditProjectModal";
-import GalleryModal from "./GalleryModal";
-import CreateProjectModal from "./CreateProjectModal";
-import CoverImageModal from "./CoverImageModal";
+import { useState, useEffect } from 'react';
+import { axiosInstance } from '../config/axiosInstance';
+import Skeleton from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
+import Swal from 'sweetalert2';
+import EditProjectModal from './EditProjectModal';
+import GalleryModal from './GalleryModal';
+import CreateProjectModal from './CreateProjectModal';
+import CoverImageModal from './CoverImageModal';
 
 const ProjectsTable = () => {
   const [projects, setProjects] = useState([]);
@@ -25,27 +24,25 @@ const ProjectsTable = () => {
 
   const handleSaveCreate = async (formData) => {
     try {
-      await axiosInstance.post("/crear/proyecto", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
+      await axiosInstance.post('/crear/proyecto', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
       });
       await getProjects();
-      Swal.fire("Creado", "El proyecto fue creado con éxito.", "success");
+      Swal.fire('Creado', 'El proyecto fue creado con éxito.', 'success');
       handleCloseCreateModal();
     } catch (err) {
-      console.error("Error al crear proyecto:", err);
-      Swal.fire("Error", "No se pudo crear el proyecto.", "error");
+      console.error('Error al crear proyecto:', err);
+      Swal.fire('Error', 'No se pudo crear el proyecto.', 'error');
     }
   };
 
   const getProjects = async () => {
     try {
       setLoading(true);
-      const response = await axiosInstance.get("/proyectos");
+      const response = await axiosInstance.get('/proyectos');
       setProjects(response.data.projects);
     } catch (error) {
-      console.error("Error fetching projects:", error);
+      console.error('Error fetching projects:', error);
     } finally {
       setLoading(false);
     }
@@ -57,53 +54,41 @@ const ProjectsTable = () => {
 
   const handleDelete = async (id) => {
     const result = await Swal.fire({
-      title: "¿Estás seguro?",
-      text: "Esta acción eliminará el proyecto de forma permanente.",
-      icon: "warning",
+      title: '¿Estás seguro?',
+      text: 'Esta acción eliminará el proyecto de forma permanente.',
+      icon: 'warning',
       showCancelButton: true,
-      confirmButtonColor: "#d33",
-      cancelButtonColor: "#3085d6",
-      confirmButtonText: "Sí, eliminar",
-      cancelButtonText: "Cancelar",
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar',
     });
 
     if (result.isConfirmed) {
       try {
         await axiosInstance.delete(`eliminar/proyecto/${id}`);
         await getProjects();
-        Swal.fire("¡Eliminado!", "El proyecto ha sido eliminado.", "success");
+        Swal.fire('¡Eliminado!', 'El proyecto ha sido eliminado.', 'success');
       } catch (err) {
-        console.error("Error al eliminar", err);
-        Swal.fire("Error", "No se pudo eliminar el proyecto.", "error");
+        console.error('Error al eliminar', err);
+        Swal.fire('Error', 'No se pudo eliminar el proyecto.', 'error');
       }
     }
   };
 
-const handleSaveEdit = async (updatedProject) => {
-  
-  setProjects((prev) =>
-    prev.map((p) => (p._id === updatedProject._id ? updatedProject : p))
-  );
-  handleCloseEditModal();
-};
-
-
+  const handleSaveEdit = async (updatedProject) => {
+    setProjects((prev) => prev.map((p) => (p._id === updatedProject._id ? updatedProject : p)));
+    handleCloseEditModal();
+  };
 
   const handleGalleryUpdated = (updatedProject) => {
-    setProjects((prevProjects) =>
-      prevProjects.map((proj) =>
-        proj._id === updatedProject._id ? updatedProject : proj
-      )
-    );
-
+    setProjects((prev) => prev.map((proj) => (proj._id === updatedProject._id ? updatedProject : proj)));
     setProjectToViewGallery(updatedProject);
     getProjects();
   };
 
   const handleCoverImageSaved = (updatedProject) => {
-    setProjects((prev) =>
-      prev.map((p) => (p._id === updatedProject._id ? updatedProject : p))
-    );
+    setProjects((prev) => prev.map((p) => (p._id === updatedProject._id ? updatedProject : p)));
     getProjects();
   };
 
@@ -137,176 +122,101 @@ const handleSaveEdit = async (updatedProject) => {
     setProjectToEdit(null);
   };
 
-  const handleDeleteImage = async (projectId, imageUrl) => {
-    try {
-      await axiosInstance.put(`/proyectos/${projectId}/remove-image`, {
-        imageUrl,
-      });
-
-      // Actualizar solo la galería del proyecto actual en el modal
-      setProjectToViewGallery((prev) =>
-        prev && prev._id === projectId
-          ? {
-              ...prev,
-              gallery: prev.gallery.filter((img) => img !== imageUrl),
-            }
-          : prev
-      );
-
-      // También actualizar el estado general de proyectos
-      setProjects((prevProjects) =>
-        prevProjects.map((proj) =>
-          proj._id === projectId
-            ? {
-                ...proj,
-                gallery: proj.gallery.filter((img) => img !== imageUrl),
-              }
-            : proj
-        )
-      );
-    } catch (error) {
-      console.error("Error al eliminar imagen de la galería:", error);
-      Swal.fire("Error", "No se pudo eliminar la imagen.", "error");
-    }
-  };
-
   return (
-    <div className="container mt-5">
-      <h2 className="text-center">Lista de Proyectos</h2>
-      <div className="d-flex justify-content-end mb-3">
-        <button className="btn btn-success" onClick={handleOpenCreateModal}>
-          Crear proyecto
-        </button>
+    <div className="min-h-screen bg-light pt-24 pb-16">
+      <div className="max-w-7xl mx-auto px-6 lg:px-8">
+        <div className="flex items-center justify-between mb-10">
+          <h1 className="font-display text-3xl text-primary font-light">Lista de Proyectos</h1>
+          <button
+            onClick={handleOpenCreateModal}
+            className="bg-secondary text-white px-6 py-3 text-sm tracking-[0.15em] uppercase hover:bg-secondary/90 transition-colors duration-300"
+          >
+            Crear proyecto
+          </button>
+        </div>
+
+        <div className="bg-white shadow-sm overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead className="bg-primary text-white">
+                <tr>
+                  <th className="px-6 py-4 text-left text-xs tracking-wider uppercase">Nombre</th>
+                  <th className="px-6 py-4 text-left text-xs tracking-wider uppercase">Descripción</th>
+                  <th className="px-6 py-4 text-left text-xs tracking-wider uppercase">Categoría</th>
+                  <th className="px-6 py-4 text-left text-xs tracking-wider uppercase">Portada</th>
+                  <th className="px-6 py-4 text-left text-xs tracking-wider uppercase">Galería</th>
+                  <th className="px-6 py-4 text-left text-xs tracking-wider uppercase">Acciones</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-primary/10">
+                {loading
+                  ? Array.from({ length: 5 }).map((_, i) => (
+                      <tr key={i} className="animate-pulse">
+                        <td className="px-6 py-4"><Skeleton width={120} /></td>
+                        <td className="px-6 py-4"><Skeleton count={2} /></td>
+                        <td className="px-6 py-4"><Skeleton width={100} /></td>
+                        <td className="px-6 py-4"><Skeleton width={80} height={32} /></td>
+                        <td className="px-6 py-4"><Skeleton width={80} height={32} /></td>
+                        <td className="px-6 py-4"><Skeleton width={150} height={32} /></td>
+                      </tr>
+                    ))
+                  : projects.map((project) => (
+                      <tr key={project._id} className="hover:bg-light/50 transition-colors">
+                        <td className="px-6 py-4 text-sm text-primary font-medium">{project.title}</td>
+                        <td className="px-6 py-4 text-sm text-muted max-w-xs truncate">{project.description}</td>
+                        <td className="px-6 py-4">
+                          <span className="px-3 py-1 text-xs tracking-wider uppercase bg-light text-primary">
+                            {project.category}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4">
+                          {project.coverImage ? (
+                            <button
+                              onClick={() => handleViewCoverImage(project)}
+                              className="text-sm text-secondary hover:text-secondary/80 transition-colors"
+                            >
+                              Ver Portada
+                            </button>
+                          ) : (
+                            <span className="text-sm text-muted">Sin imagen</span>
+                          )}
+                        </td>
+                        <td className="px-6 py-4">
+                          <button
+                            onClick={() => handleViewGallery(project)}
+                            className="text-sm text-secondary hover:text-secondary/80 transition-colors"
+                          >
+                            Ver +{project.gallery.length}
+                          </button>
+                        </td>
+                        <td className="px-6 py-4">
+                          <div className="flex gap-3">
+                            <button
+                              onClick={() => handleEdit(project)}
+                              className="text-sm text-primary hover:text-secondary transition-colors"
+                            >
+                              Editar
+                            </button>
+                            <button
+                              onClick={() => handleDelete(project._id)}
+                              className="text-sm text-red-500 hover:text-red-700 transition-colors"
+                            >
+                              Eliminar
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <EditProjectModal show={showEditModal} onClose={handleCloseEditModal} project={projectToEdit} onSave={handleSaveEdit} />
+        <GalleryModal show={showGalleryModal} onClose={handleCloseGalleryModal} project={projectToViewGallery} onGalleryUpdated={handleGalleryUpdated} />
+        <CoverImageModal show={showCoverImage} onClose={handleCloseCoverImage} project={projectToCoverImage} onSave={handleCoverImageSaved} />
+        <CreateProjectModal show={showCreateModal} onClose={handleCloseCreateModal} onSave={handleSaveCreate} />
       </div>
-      <Table striped bordered hover responsive className="table-projects mt-4">
-        <thead>
-          <tr>
-            <th>Nombre</th>
-            <th>Descripción</th>
-            <th>Detalles</th>
-            <th>Categoria</th>
-            <th>Imagen Portada</th>
-            <th>Imágenes</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          {loading
-            ? Array.from({ length: 9 }).map((_, i) => (
-                <tr key={i}>
-                  <td>
-                    <Skeleton width={120} />
-                  </td>
-                  <td>
-                    <Skeleton count={2} />
-                  </td>
-                  <td>
-                    <Skeleton width={100} />
-                  </td>
-                  <td>
-                    <Skeleton width={100} />
-                  </td>
-                  <td>
-                    <Skeleton width={120} height={80} />
-                  </td>
-                  <td>
-                    <div style={{ display: "flex", gap: "5px" }}>
-                      <Skeleton width={50} height={50} count={3} />
-                    </div>
-                  </td>
-                  <td>
-                    <Skeleton
-                      width={60}
-                      height={30}
-                      style={{ marginRight: "5px" }}
-                    />
-                    <Skeleton
-                      width={60}
-                      height={30}
-                      style={{ marginRight: "5px" }}
-                    />
-                    <Skeleton width={60} height={30} />
-                  </td>
-                </tr>
-              ))
-            : projects.map((project) => (
-                <tr key={project._id}>
-                  <td>{project.title}</td>
-                  <td>{project.description}</td>
-                  <td>{project.details}</td>
-                  <td>{project.category}</td>
-                  <td>
-                    {project.coverImage ? (
-                      <button
-                        className="btn btn-sm btn-secondary"
-                        onClick={() => handleViewCoverImage(project)}
-                      >
-                        Ver Portada
-                      </button>
-                    ) : (
-                      <span>Sin imagen</span>
-                    )}
-                  </td>
-                  <td>
-                    <div
-                      style={{ display: "flex", gap: "5px", flexWrap: "wrap" }}
-                    >
-                      {
-                        <button
-                          className="btn btn-sm btn-secondary"
-                          onClick={() => handleViewGallery(project)}
-                        >
-                          Ver +{project.gallery.length}
-                        </button>
-                      }
-                    </div>
-                  </td>
-                  <td>
-                    <button
-                      className="btn btn-sm btn-primary me-1"
-                      onClick={() => handleEdit(project)}
-                    >
-                      Editar
-                    </button>
-                    <button
-                      className="btn btn-sm btn-danger me-1"
-                      onClick={() => handleDelete(project._id)}
-                    >
-                      Eliminar
-                    </button>
-                  </td>
-                </tr>
-              ))}
-        </tbody>
-      </Table>
-
-      <EditProjectModal
-        show={showEditModal}
-        onClose={handleCloseEditModal}
-        project={projectToEdit}
-        onSave={handleSaveEdit}
-      />
-
-      <GalleryModal
-        show={showGalleryModal}
-        onClose={handleCloseGalleryModal}
-        project={projectToViewGallery}
-        onDeleteImage={handleDeleteImage}
-        onGalleryUpdated={handleGalleryUpdated}
-      />
-
-      <CoverImageModal
-        show={showCoverImage}
-        onClose={handleCloseCoverImage}
-        project={projectToCoverImage}
-        onSave={handleCoverImageSaved}
-      />
-
-      <CreateProjectModal
-        show={showCreateModal}
-        onClose={handleCloseCreateModal}
-        onSave={handleSaveCreate}
-      />
     </div>
   );
 };
