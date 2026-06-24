@@ -6,16 +6,15 @@ const AdminGuard = ({ children }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const clave = prompt("🔒 Ingrese la clave de administrador:");
-    if (clave === "alvaroGio_2025") {
+    const token = localStorage.getItem("token");
+    if (token) {
       setAuthorized(true);
     } else {
-      alert("Clave incorrecta ❌");
-      navigate("/"); 
+      navigate("/login");
     }
-  }, []);
+  }, [navigate]);
 
-  if (!authorized) return null; 
+  if (!authorized) return null;
 
   return children;
 };
