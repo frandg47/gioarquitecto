@@ -13,8 +13,9 @@ const ProjectSection = () => {
     try {
       setLoading(true);
       const response = await axiosInstance.get('/proyectos');
-      setProjects(response.data.projects);
+      setProjects(response.data.projects || []);
     } catch (error) {
+      setProjects([]);
       Swal.fire({
         icon: 'error',
         title: `Error ${error.response?.data?.status || ''}`,
@@ -32,7 +33,7 @@ const ProjectSection = () => {
   const filteredProjects =
     activeFilter === 'todos'
       ? projects
-      : projects.filter((p) => p.category.toLowerCase() === activeFilter);
+      : projects.filter((p) => p.category?.toLowerCase() === activeFilter);
 
   const filters = ['todos', 'residencial', 'comercial'];
 

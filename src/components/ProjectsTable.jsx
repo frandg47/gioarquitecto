@@ -40,8 +40,9 @@ const ProjectsTable = () => {
     try {
       setLoading(true);
       const response = await axiosInstance.get('/proyectos');
-      setProjects(response.data.projects);
+      setProjects(response.data.projects || []);
     } catch (error) {
+      setProjects([]);
       console.error('Error fetching projects:', error);
     } finally {
       setLoading(false);

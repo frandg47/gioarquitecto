@@ -36,16 +36,26 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-light px-6">
-      <div className="w-full max-w-md">
+    <div className="relative min-h-screen flex items-center justify-center px-6">
+      {/* Background */}
+      <div
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+        style={{ backgroundImage: `url('/proyecto4.png')` }}
+      >
+        <div className="absolute inset-0 bg-primary/80 backdrop-blur-sm" />
+      </div>
+
+      {/* Form */}
+      <div className="relative z-10 w-full max-w-md">
         <div className="text-center mb-10">
+          <img src="/LOGO SOLO.png" alt="GIO" className="h-16 w-auto mx-auto mb-6" />
           <p className="text-secondary tracking-[0.3em] uppercase text-sm mb-4">Admin</p>
-          <h1 className="font-display text-4xl text-primary font-light">Iniciar Sesión</h1>
+          <h1 className="font-display text-4xl text-white font-light">Iniciar Sesión</h1>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6 bg-white p-10 shadow-sm">
+        <form onSubmit={handleSubmit} className="space-y-6 bg-white/10 backdrop-blur-md border border-white/20 p-10">
           <div>
-            <label htmlFor="email" className="block text-sm tracking-wider uppercase text-primary mb-2">
+            <label htmlFor="email" className="block text-sm tracking-wider uppercase text-white/80 mb-2">
               Email
             </label>
             <input
@@ -54,12 +64,12 @@ const Login = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="w-full px-0 py-3 bg-transparent border-0 border-b border-primary/20 text-primary placeholder:text-muted/50 focus:outline-none focus:border-secondary transition-colors duration-300"
+              className="w-full px-0 py-3 bg-transparent border-0 border-b border-white/30 text-white placeholder:text-white/40 focus:outline-none focus:border-secondary transition-colors duration-300"
             />
           </div>
 
           <div>
-            <label htmlFor="password" className="block text-sm tracking-wider uppercase text-primary mb-2">
+            <label htmlFor="password" className="block text-sm tracking-wider uppercase text-white/80 mb-2">
               Contraseña
             </label>
             <input
@@ -68,14 +78,14 @@ const Login = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="w-full px-0 py-3 bg-transparent border-0 border-b border-primary/20 text-primary placeholder:text-muted/50 focus:outline-none focus:border-secondary transition-colors duration-300"
+              className="w-full px-0 py-3 bg-transparent border-0 border-b border-white/30 text-white placeholder:text-white/40 focus:outline-none focus:border-secondary transition-colors duration-300"
             />
           </div>
 
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full bg-primary text-white py-4 text-sm tracking-[0.2em] uppercase hover:bg-secondary transition-colors duration-500 disabled:opacity-50 disabled:cursor-not-allowed mt-4"
+            className="w-full bg-secondary text-primary py-4 text-sm tracking-[0.2em] uppercase hover:bg-white transition-colors duration-500 disabled:opacity-50 disabled:cursor-not-allowed mt-4 font-medium"
           >
             {isSubmitting ? 'Ingresando...' : 'Ingresar'}
           </button>
