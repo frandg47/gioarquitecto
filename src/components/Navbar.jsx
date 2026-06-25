@@ -13,15 +13,6 @@ const Navbar = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  useEffect(() => {
-    if (menuOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-    }
-    return () => { document.body.style.overflow = ''; };
-  }, [menuOpen]);
-
   const isActive = (path) => {
     if (path === '/proyectos') return location.pathname.startsWith('/proyectos');
     return location.pathname === path;
@@ -85,11 +76,11 @@ const Navbar = () => {
 
       {/* Mobile menu */}
       <div
-        className={`md:hidden fixed inset-0 top-20 bg-primary transition-all duration-500 ease-out ${
-          menuOpen ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-4'
+        className={`md:hidden absolute top-full left-0 right-0 bg-primary shadow-xl transition-all duration-500 ease-out overflow-hidden ${
+          menuOpen ? 'max-h-[80vh] opacity-100 visible' : 'max-h-0 opacity-0 invisible'
         }`}
       >
-        <nav className="flex flex-col items-center justify-center gap-2 pt-16 px-6">
+        <nav className="flex flex-col items-center py-8 px-6">
           {[
             { to: '/', label: 'Inicio', type: 'link' },
             { to: '/proyectos', label: 'Proyectos', type: 'link' },
@@ -99,16 +90,14 @@ const Navbar = () => {
             <div
               key={item.label}
               className={`w-full text-center transition-all duration-500 ease-out ${
-                menuOpen
-                  ? 'opacity-100 translate-y-0'
-                  : 'opacity-0 translate-y-8'
+                menuOpen ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
               }`}
-              style={{ transitionDelay: menuOpen ? `${index * 100 + 150}ms` : '0ms' }}
+              style={{ transitionDelay: menuOpen ? `${index * 80 + 100}ms` : '0ms' }}
             >
               {item.type === 'link' ? (
                 <Link
                   to={item.to}
-                  className="block py-4 text-lg tracking-[0.3em] uppercase text-white/80 hover:text-secondary transition-colors duration-300 border-b border-white/10"
+                  className="block py-4 text-lg tracking-[0.25em] uppercase text-white/80 hover:text-secondary transition-colors duration-300 border-b border-white/10 last:border-0"
                   onClick={() => setMenuOpen(false)}
                 >
                   {item.label}
@@ -116,7 +105,7 @@ const Navbar = () => {
               ) : (
                 <button
                   onClick={() => handleSectionClick(item.section)}
-                  className="block w-full py-4 text-lg tracking-[0.3em] uppercase text-white/80 hover:text-secondary transition-colors duration-300 border-b border-white/10"
+                  className="block w-full py-4 text-lg tracking-[0.25em] uppercase text-white/80 hover:text-secondary transition-colors duration-300 border-b border-white/10 last:border-0"
                 >
                   {item.label}
                 </button>
@@ -124,16 +113,6 @@ const Navbar = () => {
             </div>
           ))}
         </nav>
-
-        {/* Decorative line */}
-        <div className="absolute bottom-16 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3">
-          <div className={`w-px h-8 bg-secondary/40 transition-all duration-700 ${menuOpen ? 'opacity-100 scale-y-100' : 'opacity-0 scale-y-0'}`}
-               style={{ transitionDelay: menuOpen ? '600ms' : '0ms' }} />
-          <span className={`text-secondary/60 text-xs tracking-[0.4em] uppercase transition-all duration-500 ${menuOpen ? 'opacity-100' : 'opacity-0'}`}
-                style={{ transitionDelay: menuOpen ? '700ms' : '0ms' }}>
-            GIO
-          </span>
-        </div>
       </div>
     </header>
   );
